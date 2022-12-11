@@ -229,8 +229,7 @@ router.get("/jobs", jwtAnonAuth, (req, res) => {
       if (!req.query.myjobs) {
         const config = {
           headers: {
-            Authorization:
-              "Basic NWUxYTA3MjktNmI5ZC00OTk5LTg0NjEtZDk5NmExOGMwNDA5Og==",
+            Authorization: `Basic ${process.env.REED_API_KEY}`,
             "Accept-Encoding": "application/json",
           },
         };

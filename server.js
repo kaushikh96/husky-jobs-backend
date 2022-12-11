@@ -1,3 +1,9 @@
+const dotenv = require("dotenv");
+
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -7,7 +13,7 @@ const fs = require("fs");
 
 // MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/jobPortal", {
+  .connect(process.env.DATABASE_URL || "mongodb://localhost:27017/jobPortal", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
