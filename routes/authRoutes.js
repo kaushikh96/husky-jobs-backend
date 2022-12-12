@@ -46,6 +46,7 @@ router.post("/signup", (req, res) => {
           res.json({
             token: token,
             type: user.type,
+            name: data.name,
           });
         })
         .catch((err) => {
@@ -79,10 +80,28 @@ router.post("/login", (req, res, next) => {
       }
       // Token
       const token = jwt.sign({ _id: user._id }, authKeys.jwtSecretKey);
-      res.json({
-        token: token,
-        type: user.type,
-      });
+      if (user.type === "recruiter") {
+        Recruiter.find({ userId: user._id }).then((rec) => {
+          res.json({
+            token: token,
+            type: user.type,
+            name: rec[0].name,
+          });
+        });
+      } else if (user.type === "applicant") {
+        JobApplicant.find({ userId: user._id }).then((applicant) => {
+          res.json({
+            token: token,
+            type: user.type,
+            name: applicant[0].name,
+          });
+        });
+      } else {
+        res.json({
+          token: token,
+          type: user.type,
+        });
+      }
     }
   )(req, res, next);
 });

@@ -33,6 +33,7 @@ router.post("/jobs", jwtAuth, (req, res) => {
     maxApplicants: data.maxApplicants,
     maxPositions: data.maxPositions,
     dateOfPosting: data.dateOfPosting,
+    description: data.description,
     deadline: data.deadline,
     skillsets: data.skillsets,
     jobType: data.jobType,
@@ -251,6 +252,7 @@ router.get("/jobs", jwtAnonAuth, (req, res) => {
             let newJobs = [];
             resp.data.results?.forEach((newJob) => {
               if (!existingExternalJobIds.includes(String(newJob.jobId))) {
+                console.log(newJob);
                 let jobToAdd = new Job({
                   userId: new mongoose.Types.ObjectId(
                     "56cb91bdc3464f14678934ca"
@@ -261,6 +263,7 @@ router.get("/jobs", jwtAnonAuth, (req, res) => {
                   dateOfPosting: parseDate(newJob.date),
                   deadline: parseDate(newJob.expirationDate),
                   skillsets: [],
+                  description: newJob.jobDescription,
                   jobType: newJob.fullTime ? "Full Time" : "Part Time",
                   externalJobId: newJob.jobId,
                   duration: 0,
@@ -370,6 +373,9 @@ router.put("/jobs/:id", jwtAuth, (req, res) => {
       }
       if (data.deadline) {
         job.deadline = data.deadline;
+      }
+      if (data.description) {
+        job.description = data.description;
       }
       job
         .save()
